@@ -46,9 +46,11 @@ class QlLogScan(Depend):
                                                self.str2list(self.get_env("QL_LOG_BLACK_FILE")))
         self.history_scan_deepin = self.get_env("QL_LOG_SCAN_DEEPIN", "0")
         self.auto_install_depend = self.get_env("QL_LOG_AUTO_INSTALL_DEPEND", False)
+        self.print_meta_detail = self.get_env("QL_LOG_PRINT_META_DETAIL", False)
         self.npm = self.get_env("QL_LOG_NPM", "npm")
         self.log_stat = {
             "all": 0,
+            "meta": {},
             "nodejs_err": 0,
             "python_err": 0,
             "err_dict": {},
@@ -71,11 +73,14 @@ class QlLogScan(Depend):
     def analysisLog(self):
         for path, dir_list, file_list in os.walk(self.ql_log_path):
             dir_name = path.replace(self.ql_log_path, "")
+            self.log_stat["meta"][dir_name] = 0
             if not self.re_filter_list(dir_name, self.filter_dir_list):
                 for file_name in file_list:
                     if not self.re_filter_list(file_name, self.filter_log_list) and re.search(r"(.*?).log$",
                                                                                               file_name) and file_name[
                                                                                                              :13] in self.LogNameHeadList:
+                        self.log_stat["meta"][dir_name] += 1
+                        self.log_stat["all"] += 1
                         # 读取日志
                         log_file = open(os.path.join(path, file_name), "r")
                         try:
@@ -107,7 +112,6 @@ class QlLogScan(Depend):
                                     miss_depend = re.search(r"ModuleNotFoundError: No module named \'([a-zA-Z0-9_-]+)\'", v)
                                     if miss_depend and miss_depend.group(1) not in self.log_stat["python_depend"]:
                                         self.log_stat["python_depend"].append(miss_depend.group(1))
-                            self.log_stat["all"] += 1
                         except Exception as e:
                             err_log = "读取日志" + str(os.path.join(path, file_name)) + "出现异常: " + str(e) + "\n"
                             self.log_stat["readlog_err"].append(err_log)
@@ -142,6 +146,11 @@ class QlLogScan(Depend):
                 round((float(self.log_stat["nodejs_err"]) / float(self.log_stat["all"]) * 100), 2)) + " %\n"
             result += "    🕵️‍♂️Python异常：" + str(self.log_stat["python_err"]) + " 次，占比 " + str(
                 round((float(self.log_stat["python_err"]) / float(self.log_stat["all"]) * 100), 2)) + " %\n"
+        list_meta = sorted(self.log_stat["meta"].items(), key=lambda x: x[1], reverse=True)
+        if self.print_meta_detail:
+            for meta in list_meta:
+                result += meta + " ]\n"
+
         if len_nodejs_depend > 0 or len_python_depend > 0:
             result += "👮‍♂️依赖检测: " + (
                 "☢已开启自动补全依赖,将执行shell命令,请小心恶意脚本👿" if self.auto_install_depend else "❎未开启自动补全依赖，请手动补齐以下依赖🤗") + "\n"
