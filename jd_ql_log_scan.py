@@ -141,13 +141,15 @@ class QlLogScan(Depend):
                     (float(self.log_stat["nodejs_err"] + self.log_stat["python_err"]) / float(
                         self.log_stat["all"]) * 100),
                     2)) + " %\n"
-            result += "🧐其中:\n"
-            result += "    🕵️‍♂️Nodejs异常：" + str(self.log_stat["nodejs_err"]) + " 次，占比 " + str(
-                round((float(self.log_stat["nodejs_err"]) / float(self.log_stat["all"]) * 100), 2)) + " %\n"
-            result += "    🕵️‍♂️Python异常：" + str(self.log_stat["python_err"]) + " 次，占比 " + str(
-                round((float(self.log_stat["python_err"]) / float(self.log_stat["all"]) * 100), 2)) + " %\n"
+            if len_nodejs_depend > 0 or len_python_depend > 0:
+                result += "🧐其中:\n"
+                result += "    🕵️‍♂️Nodejs异常：" + str(self.log_stat["nodejs_err"]) + " 次，占比 " + str(
+                    round((float(self.log_stat["nodejs_err"]) / float(self.log_stat["all"]) * 100), 2)) + " %\n"
+                result += "    🕵️‍♂️Python异常：" + str(self.log_stat["python_err"]) + " 次，占比 " + str(
+                    round((float(self.log_stat["python_err"]) / float(self.log_stat["all"]) * 100), 2)) + " %\n"
         list_meta = sorted(self.log_stat["meta"].items(), key=lambda x: x[1], reverse=True)
         if self.print_meta_detail:
+            result += "😁执行次数详情:\n"
             for meta in list_meta:
                 result += str(meta) + " ]\n"
 
