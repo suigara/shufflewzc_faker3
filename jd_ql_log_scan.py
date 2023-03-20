@@ -149,7 +149,7 @@ class QlLogScan(Depend):
         list_meta = sorted(self.log_stat["meta"].items(), key=lambda x: x[1], reverse=True)
         if self.print_meta_detail:
             for meta in list_meta:
-                result += meta + " ]\n"
+                result += str(meta) + " ]\n"
 
         if len_nodejs_depend > 0 or len_python_depend > 0:
             result += "👮‍♂️依赖检测: " + (
