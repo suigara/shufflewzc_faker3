@@ -11,13 +11,15 @@ cron: 30 0 0 * * *
 new Env('plus专属礼-天天领福利');
 """
 
-import requests, sys, os, re, time
+import requests, sys, os, re, random, time
 from datetime import datetime
 from urllib.parse import quote_plus, unquote_plus
 from functools import partial
 print = partial(print, flush=True)
 import warnings
 warnings.filterwarnings("ignore", category=DeprecationWarning)
+
+UserAgent = ''
 
 try:
     from jd_sign import *
@@ -56,6 +58,25 @@ def doTask(cookie):
             print(f"⛈ {res['message']}")
     except:
         print(response.text)
+
+def userAgent():
+    """
+    随机生成一个UA
+    :return: jdapp;iPhone;9.4.8;14.3;xxxx;network/wifi;ADID/201EDE7F-5111-49E8-9F0D-CCF9677CD6FE;supportApplePay/0;hasUPPay/0;hasOCPay/0;model/iPhone13,4;addressid/2455696156;supportBestPay/0;appBuild/167629;jdSupportDarkMode/0;Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1
+    """
+    if not UserAgent:
+        uuid = ''.join(random.sample('123456789abcdef123456789abcdef123456789abcdef123456789abcdef', 40))
+        addressid = ''.join(random.sample('1234567898647', 10))
+        iosVer = ''.join(
+            random.sample(["14.5.1", "14.4", "14.3", "14.2", "14.1", "14.0.1", "13.7", "13.1.2", "13.1.1"], 1))
+        iosV = iosVer.replace('.', '_')
+        iPhone = ''.join(random.sample(["8", "9", "10", "11", "12", "13"], 1))
+        ADID = ''.join(random.sample('0987654321ABCDEF', 8)) + '-' + ''.join(
+            random.sample('0987654321ABCDEF', 4)) + '-' + ''.join(random.sample('0987654321ABCDEF', 4)) + '-' + ''.join(
+            random.sample('0987654321ABCDEF', 4)) + '-' + ''.join(random.sample('0987654321ABCDEF', 12))
+        return f'jdapp;iPhone;10.0.4;{iosVer};{uuid};network/wifi;ADID/{ADID};supportApplePay/0;hasUPPay/0;hasOCPay/0;model/iPhone{iPhone},1;addressid/{addressid};supportBestPay/0;appBuild/167629;jdSupportDarkMode/0;Mozilla/5.0 (iPhone; CPU iPhone OS {iosV} like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1'
+    else:
+        return UserAgent
 
 if __name__ == '__main__':
     try:

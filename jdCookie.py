@@ -5,6 +5,11 @@
 # @TG      : https://t.me/HarbourToulu
 # @File    : jdCookie.py
 
+'''
+cron: 13 5 * * *
+new Env('wskey转换');
+'''
+
 import os
 import time
 from functools import partial
