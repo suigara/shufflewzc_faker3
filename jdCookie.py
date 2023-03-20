@@ -6,7 +6,7 @@
 # @File    : jdCookie.py
 
 '''
-cron: 13 5 * * *
+cron: 2 5 * * *
 new Env('jdCookie');
 '''
 
