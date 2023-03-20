@@ -205,5 +205,5 @@ if __name__ == "__main__":
         logger.info("😁没有重复任务~")
     else:
         disable_duplicate_tasks(ids)
-    if send:
-        send("💖禁用重复任务成功", f"\n{sum_str}\n{filter_str}\n{disable_str}")
+        if send:
+            send("💖禁用重复任务成功", f"\n{sum_str}\n{filter_str}\n{disable_str}")
