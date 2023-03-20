@@ -51,6 +51,9 @@ def load_send() -> None:
             logger.info(f"❌加载通知服务失败!!!\n{traceback.format_exc()}")
 
 
+def filterDisable(task):
+    return int(task.get("isDisabled")) == 0
+
 def get_tasklist() -> list:
     tasklist = []
     t = round(time.time() * 1000)
@@ -59,6 +62,7 @@ def get_tasklist() -> list:
     datas = json.loads(response.content.decode("utf-8"))
     if datas.get("code") == 200:
         tasklist = datas.get("data")
+        filter(filterDisable, tasklist)
     return tasklist
 
 
@@ -180,7 +184,7 @@ if __name__ == "__main__":
     if len(tasklist) == 0:
         logger.info("❌无法获取 tasklist!!!")
         exit(1)
-    sum = f"所有任务数量为：{len(tasklist)}"
+
     filter_list, res_list = filter_res_sub(tasklist)
 
     temids, tem_tasks, dupids = get_duplicate_list(filter_list)
@@ -191,14 +195,14 @@ if __name__ == "__main__":
         ids = dupids
         logger.info("你选择保留除了设置的前缀以外的其他任务")
 
-
-    filter = f"过滤的任务数量为：{len(res_list)}"
-    disable = f"禁用的任务数量为：{len(ids)}"
-    logging.info("\n=== 禁用数量统计 ===\n" + sum + "\n" + filter + "\n" + disable)
+    sum_str = f"所有任务数量为：{len(tasklist['data'])}"
+    filter_str = f"过滤的任务数量为：{len(res_list)}"
+    disable_str = f"禁用的任务数量为：{len(ids)}"
+    logging.info("\n=== 禁用数量统计 ===\n" + sum_str + "\n" + filter_str + "\n" + disable_str)
 
     if len(ids) == 0:
         logger.info("😁没有重复任务~")
     else:
         disable_duplicate_tasks(ids)
     if send:
-        send("💖禁用重复任务成功", f"\n{sum}\n{filter}\n{disable}")
+        send("💖禁用重复任务成功", f"\n{sum_str}\n{filter_str}\n{disable_str}")
