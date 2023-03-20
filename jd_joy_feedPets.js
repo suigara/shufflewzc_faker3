@@ -222,6 +222,7 @@ function TotalBean() {
                 }
             } catch (e) {
                 $.logErr(e, resp)
+                console.log('京东服务返回data:' + data);
             } finally {
                 resolve()
             }
