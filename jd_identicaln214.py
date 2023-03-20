@@ -63,7 +63,7 @@ def get_tasklist() -> list:
     if datas.get("code") == 200:
         tasklist_data = datas.get("data")
         tasklist = tasklist_data['data']
-        tasklist = filter(filterDisable, tasklist)
+        tasklist = list(filter(filterDisable, tasklist))
     return tasklist
 
 
