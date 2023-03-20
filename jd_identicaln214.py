@@ -51,7 +51,7 @@ def load_send() -> None:
             logger.info(f"❌加载通知服务失败!!!\n{traceback.format_exc()}")
 
 
-def filterDisable(task):
+def filterDisable(task) -> bool:
     return int(task.get("isDisabled")) == 0
 
 def get_tasklist() -> list:
@@ -61,15 +61,16 @@ def get_tasklist() -> list:
     response = requests.get(url=url, headers=headers)
     datas = json.loads(response.content.decode("utf-8"))
     if datas.get("code") == 200:
-        tasklist = datas.get("data")
-        tasklist = filter(filterDisable, tasklist)
+        tasklist_data = datas.get("data")
+        tasklist = tasklist_data['data']
+        filter(filterDisable, tasklist)
     return tasklist
 
 
 def filter_res_sub(tasklist: list) -> tuple:
     filter_list = []
     res_list = []
-    for task in tasklist['data']:
+    for task in tasklist:
         for sub in sub_list:
             if task.get("command").find(sub) == -1:
                 flag = False
@@ -195,7 +196,7 @@ if __name__ == "__main__":
         ids = dupids
         logger.info("你选择保留除了设置的前缀以外的其他任务")
 
-    sum_str = f"所有任务数量为：{len(tasklist['data'])}"
+    sum_str = f"所有任务数量为：{len(tasklist)}"
     filter_str = f"过滤的任务数量为：{len(res_list)}"
     disable_str = f"禁用的任务数量为：{len(ids)}"
     logging.info("\n=== 禁用数量统计 ===\n" + sum_str + "\n" + filter_str + "\n" + disable_str)
