@@ -7,7 +7,7 @@
 
 '''
 cron: 13 5 * * *
-new Env('wskey转换');
+new Env('jdCookie');
 '''
 
 import os
