@@ -62,7 +62,7 @@ def get_tasklist() -> list:
     datas = json.loads(response.content.decode("utf-8"))
     if datas.get("code") == 200:
         tasklist = datas.get("data")
-        filter(filterDisable, tasklist)
+        tasklist = filter(filterDisable, tasklist)
     return tasklist
 
 
