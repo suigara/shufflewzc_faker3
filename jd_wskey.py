@@ -416,12 +416,13 @@ def serch_ck(pin):  # 方法 搜索 Pin
         if pin in envlist[i]['value']:  # 判断envlist取值['value']
             value = envlist[i]['value']  # 取值['value']
             id = envlist[i][ql_id]  # 取值 [ql_id](变量)
+            status = envlist[i]['status']
             logger.info(str(pin) + "检索成功\n")  # 标准日志输出
-            return True, value, id  # 返回 -> True[Bool], value, id
+            return True, value, id, int(status)  # 返回 -> True[Bool], value, id
         else:  # 判断分支
             continue  # 继续循环
     logger.info(str(pin) + "检索失败\n")  # 标准日志输出
-    return False, 1  # 返回 -> False[Bool], 1
+    return False, 1, 0  # 返回 -> False[Bool], 1, 0
 
 
 def get_env():  # 方法 读取变量
@@ -619,11 +620,14 @@ if __name__ == '__main__':  # Python主函数执行入口
                             logger.info(str(wspin) + "账号禁用")  # 标准日志输出
                             ql_disable(eid)  # 执行方法[ql_disable] 传递 eid
                             text = "账号: {0} WsKey疑似失效, 已禁用Cookie".format(wspin)  # 设置推送内容
-                            ql_send(text)
+                        ql_send(text)
                 else:  # 判断分支
                     logger.info(str(wspin) + "账号有效")  # 标准日志输出
                     eid = return_serch[2]  # 读取 return_serch[2] -> eid
-                    ql_enable(eid)  # 执行方法[ql_enable] 传递 eid
+                    # 如果当前是禁用的才需要启用
+                    if return_serch[3] != 0:
+                        logger.info("--启用COOKIE--")
+                        ql_enable(eid)  # 执行方法[ql_enable] 传递 eid
                     logger.info("--------------------\n")  # 标准日志输出
             else:  # 判断分支
                 logger.info("\n新wskey\n")  # 标准日志分支
