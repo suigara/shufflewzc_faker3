@@ -611,6 +611,8 @@ if __name__ == '__main__':  # Python主函数执行入口
                         logger.info("wskey转换成功")  # 标准日志输出
                         eid = return_serch[2]  # 从 return_serch 拿到 eid
                         ql_update(eid, nt_key)  # 函数 ql_update 参数 eid JD_COOKIE
+                        text = "账号: {0} cookie已失效，WsKey转换成功，重新生成cookie".format(wspin)
+                        ql_send(text)
                     else:  # 判断分支
                         if "WSKEY_AUTO_DISABLE" in os.environ:  # 从系统变量中获取 WSKEY_AUTO_DISABLE
                             logger.info(str(wspin) + "账号失效")  # 标准日志输出
