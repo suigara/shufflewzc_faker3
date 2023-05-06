@@ -310,7 +310,7 @@ def getToken(wskey):  # 方法 获取 Wskey转换使用的 Token 由 JD_API 返�
         url = str(base64.b64decode(url_t).decode()) + 'api/genToken'  # 设置云端服务器地址 路由为 genToken
         header = {"User-Agent": ua}  # 设置 HTTP头
         params = requests.get(url=url, headers=header, verify=False, timeout=20).json()  # 设置 HTTP请求参数 超时 20秒 Json解析
-        logger.debug("params=" + params)  # 调试日志输
+        logger.debug("params=" + str(params))  # 调试日志输
     except Exception as err:  # 异常捕捉
         logger.info("Params参数获取失败")  # 标准日志输出
         logger.debug(str(err))  # 调试日志输出
@@ -521,7 +521,7 @@ def cloud_info():  # 方法 云端信息
         else:  # 分支判断
             try:  # 异常捕捉
                 c_info = json.loads(res)  # json读取参数
-                logger.debug("c_info=" + c_info)  # 调试日志输
+                logger.debug("c_info=" + str(c_info))  # 调试日志输
             except Exception as err:  # 异常捕捉
                 logger.info("云端参数解析失败")  # 标准日志输出
                 logger.debug(str(err))  # 调试日志输出
